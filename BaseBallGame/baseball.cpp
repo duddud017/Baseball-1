@@ -26,19 +26,30 @@ public:
 
 	GuessResult guess(const string guessNumber) {
 		assertIllegalArgument(guessNumber);
-		GuessResult result = { false, 0, 0 };
-
 		if(question == guessNumber)
 			return { true, 3, 0 };
+		
+		return { false, getStrikeCount(guessNumber), getBallCount(guessNumber) };
+	}
 
+	int getBallCount(const std::string& guessNumber)
+	{
+		int result{ 0 };
 		for (int idx = 0; idx < 3; ++idx) {
-			if (question[idx] == guessNumber[idx]) {
-				result.strikes++;
-			}
-
 			if (guessNumber[idx] == question[checkPos[idx][0]] ||
 				guessNumber[idx] == question[checkPos[idx][1]])
-				result.balls++;
+				result++;
+		}
+		return result;
+	}
+
+	int getStrikeCount(const std::string& guessNumber)
+	{
+		int result{ 0 };
+		for (int idx = 0; idx < 3; ++idx) {
+			if (question[idx] == guessNumber[idx]) {
+				result++;
+			}
 		}
 		return result;
 	}
