@@ -1,13 +1,23 @@
-#include <string>
+﻿#include <string>
 #include <stdexcept>
 using namespace std;
 
 struct GuessResult{
 	bool solved;
 	int strikes;
-	int balls;
+	int balls;	
 };
 
+bool operator ==(const GuessResult t1, const GuessResult t2) {
+	if (t1.solved == t2.solved &&
+		t1.strikes == t2.strikes &&
+		t1.balls == t2.balls)
+		return true;
+	return false;
+}
+
+
+int checkPos[3][2] = { {1,2}, {0,2},{0,1} };
 class Baseball {
 public:
 	Baseball(string initialQuestion):
@@ -16,9 +26,21 @@ public:
 
 	GuessResult guess(const string guessNumber) {
 		assertIllegalArgument(guessNumber);
+		GuessResult result = { false, 0, 0 };
+
 		if(question == guessNumber)
 			return { true, 3, 0 };
-		return { false, 0, 0 };
+
+		for (int idx = 0; idx < 3; ++idx) {
+			if (question[idx] == guessNumber[idx]) {
+				result.strikes++;
+			}
+
+			if (guessNumber[idx] == question[checkPos[idx][0]] ||
+				guessNumber[idx] == question[checkPos[idx][1]])
+				result.balls++;
+		}
+		return result;
 	}
 
 	void assertIllegalArgument(const std::string& guessNumber)
