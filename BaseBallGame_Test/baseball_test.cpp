@@ -1,12 +1,22 @@
 #include "pch.h"
 #include "../BaseBallGame/baseball.cpp"
 
-TEST(BaseBallGame, ThrowException) {
+class BaseBallFixture : public testing::Test {
+public:
 	Baseball game;
-	EXPECT_THROW(game.guess(string("12")), std::length_error);
-}
+	void assertIllegalArgument(string guessNumber) {
+		try {
+			game.guess(guessNumber);
+			FAIL();
+		}
+		catch (exception e) {
+			//PASS
+		}
+	}
+};
 
-TEST(BaseBallGame, ThrowExceptionWrongLetters) {
-	Baseball game;
-	EXPECT_THROW(game.guess(string("12s")), std::invalid_argument);
+TEST_F(BaseBallFixture, ThrowExceptionTest) {
+	assertIllegalArgument("12");
+	assertIllegalArgument("12s");
+	assertIllegalArgument("121");
 }
